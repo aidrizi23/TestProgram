@@ -21,7 +21,6 @@ public class ApplicationDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configuring the inheritance strategy (using TPH here)
         modelBuilder.Entity<Question>()
             .HasDiscriminator<string>("QuestionType")
             .HasValue<MultipleChoiceQuestion>("MultipleChoice")

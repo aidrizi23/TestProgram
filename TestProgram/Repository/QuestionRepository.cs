@@ -23,6 +23,32 @@ public class QuestionRepository : IQuestionRepository
         return await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
     }
     
+    // this method will create a question based on the type of question 
+    // and add it to the database
+    public async Task<Question> CreateQuestion(Question question)
+    {
+        _context.Questions.Add(question);
+        await _context.SaveChangesAsync();
+        return question;
+    }   
+        
+    // this method will update a question based on the type of question
+    // and update it in the database
+    public async Task<Question> UpdateQuestion(Question question)
+    {
+        _context.Questions.Update(question);
+        await _context.SaveChangesAsync();
+        return question;
+    }
+    
+    // this method will delete a question based on the type of question
+    // and delete it from the database
+    public async Task DeleteQuestion(Question question)
+    {
+        _context.Questions.Remove(question);
+        await _context.SaveChangesAsync();
+    }
+    
    
 }
 
