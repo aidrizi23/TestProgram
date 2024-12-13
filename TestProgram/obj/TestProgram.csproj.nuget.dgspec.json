@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/albi/Desktop/TestProgram/TestProgram/TestProgram.csproj": {}
+    "C:\\Users\\User\\RiderProjects\\TestProgram\\TestProgram\\TestProgram.csproj": {}
   },
   "projects": {
-    "/home/albi/Desktop/TestProgram/TestProgram/TestProgram.csproj": {
+    "C:\\Users\\User\\RiderProjects\\TestProgram\\TestProgram\\TestProgram.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/albi/Desktop/TestProgram/TestProgram/TestProgram.csproj",
+        "projectUniqueName": "C:\\Users\\User\\RiderProjects\\TestProgram\\TestProgram\\TestProgram.csproj",
         "projectName": "TestProgram",
-        "projectPath": "/home/albi/Desktop/TestProgram/TestProgram/TestProgram.csproj",
-        "packagesPath": "/home/albi/.nuget/packages/",
-        "outputPath": "/home/albi/Desktop/TestProgram/TestProgram/obj/",
+        "projectPath": "C:\\Users\\User\\RiderProjects\\TestProgram\\TestProgram\\TestProgram.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\RiderProjects\\TestProgram\\TestProgram\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/albi/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -47,6 +52,10 @@
               "version": "[8.0.11, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.11, )"
             },
@@ -78,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.111/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
