@@ -25,19 +25,6 @@ public class TestController : Controller
         return View(tests);
     }
 
-    public async Task<IActionResult> Details(int id)
-    {
-        // get the test by Id
-        var test = await _testRepository.GetTestById(id);
-        if (test == null)
-        {
-            return NotFound();
-        }
-        
-        // get the questions for the test
-        var questions = await _questionRepository.GetQuestionsByTestId(id);
-        
-        
-    }
+   
     
 }
