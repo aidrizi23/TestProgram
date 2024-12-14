@@ -13,12 +13,18 @@ public class TestRepository : ITestRepository
 
     public async Task<IEnumerable<Test?>> GetTestsByTeacherId(string teacherId)
     {
-        return await _context.Tests?.Where(t => t.TeacherId == teacherId).ToListAsync();
+        return await _context.Tests.
+            Where(t => t.TeacherId == teacherId).
+            Include(x => x.Teacher)
+            .AsNoTracking()
+            .ToListAsync();
     }
     
     public async Task<Test?> GetTestById(int testId)
     {
-        return await _context.Tests.FirstOrDefaultAsync(t => t.Id == testId);
+        return await _context.Tests
+            .Include(x => x.Teacher)
+            .FirstOrDefaultAsync(t => t.Id == testId);
     }
     
     public async Task<Test> CreateTest(Test test)

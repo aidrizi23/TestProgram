@@ -61,6 +61,42 @@ public class TestController : Controller
         return RedirectToAction("Index");
     }
     
+    // details method for the test
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Details(int id)
+    {
+        var test = await _testRepository.GetTestById(id);
+        return View(test);
+    }
+    
+    
+    [Authorize]
+    [HttpGet("delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        Test? test = await _testRepository.GetTestById(id);
+
+        if (test == null)
+        {
+            return NotFound();
+        }
+
+        if (user is not Teacher || test.TeacherId != user.Id)
+        {
+            return Unauthorized();
+        }
+
+        await _testRepository.DeleteTest(test);
+        return RedirectToAction("Index");
+    }
+
 
    
     
