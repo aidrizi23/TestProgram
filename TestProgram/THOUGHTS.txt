@@ -1,8 +1,0 @@
-first i need to deal with the creation of the question.
-at the same time will be creating the options for the multiple choice question.
-after these are done and correctly related to one another will create the test
-the test will be related to the teacher and student that will create and take it respectively
-than the questions will be related to the test asnd aftter that we will be able to make it so that the test is created first
-than the questions and for each question that we will need the options will be created
-will also need a student test class that will have the info for each student and for each test and then a studdentanswwer class that will have
-the info for each student for each question of a specific test

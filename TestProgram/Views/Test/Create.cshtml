@@ -1,0 +1,25 @@
+@model TestProgram.Models.Test.TestForCreationDto
+
+@{
+    ViewData["Title"] = "Create Test";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Create New Test</h2>
+            <form asp-action="Create" method="post">
+                <div class="form-group">
+                    <label asp-for="TestName" class="form-label">Test Name</label>
+                    <input asp-for="TestName" class="form-control" placeholder="Enter the test name" />
+                    <span asp-validation-for="TestName" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4 w-100">Create Test</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

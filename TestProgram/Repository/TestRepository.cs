@@ -13,7 +13,7 @@ public class TestRepository : ITestRepository
 
     public async Task<IEnumerable<Test?>> GetTestsByTeacherId(string teacherId)
     {
-        return await _context.Tests.Where(t => t.TeacherId == teacherId).ToListAsync();
+        return await _context.Tests?.Where(t => t.TeacherId == teacherId).ToListAsync();
     }
     
     public async Task<Test?> GetTestById(int testId)

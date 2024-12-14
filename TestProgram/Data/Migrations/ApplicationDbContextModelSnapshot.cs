@@ -261,6 +261,86 @@ namespace TestProgram.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("TestProgram.Data.Teacher", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teacher");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e2f11637-eed5-4de1-a289-2bd552acc7b5",
+                            Email = "albiidrizi@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Albi",
+                            LastName = "Idrizi",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
+                            NormalizedUserName = "TEACHER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOJdKdX+ylFFmD0eaUJh1m8uDTviQ1lUGF2OpvSRI2t68QO9Nl1p2kdcOuafwA4D4g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "20b98aff-4bac-4056-8237-f7e437f953a0",
+                            TwoFactorEnabled = false,
+                            UserName = "teacher"
+                        });
+                });
+
             modelBuilder.Entity("TestProgram.Data.Test", b =>
                 {
                     b.Property<int>("Id")
@@ -269,11 +349,17 @@ namespace TestProgram.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("TeacherId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("TestName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Tests");
                 });
@@ -380,6 +466,17 @@ namespace TestProgram.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Test");
+                });
+
+            modelBuilder.Entity("TestProgram.Data.Test", b =>
+                {
+                    b.HasOne("TestProgram.Data.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("TestProgram.Data.Test", b =>
