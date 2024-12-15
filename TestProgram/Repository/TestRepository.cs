@@ -26,6 +26,14 @@ public class TestRepository : ITestRepository
             .Include(x => x.Teacher)
             .FirstOrDefaultAsync(t => t.Id == testId);
     }
+
+    public async Task<Test?> GetTestByIdWithQuestions(int id)
+    {
+        return await _context.Tests
+            .Include(x => x.Teacher)
+            .Include(x => x.Questions)
+            .FirstOrDefaultAsync();
+    }
     
     public async Task<Test> CreateTest(Test test)
     {
@@ -53,6 +61,7 @@ public interface ITestRepository
 {
     Task<IEnumerable<Test?>> GetTestsByTeacherId(string teacherId);
     Task<Test?> GetTestById(int testId);
+    Task<Test?> GetTestByIdWithQuestions(int id);
     Task<Test> CreateTest(Test test);
     Task<Test> UpdateTest(Test test);
     Task DeleteTest(Test test);

@@ -56,4 +56,7 @@ public interface IQuestionRepository
 {
     Task<IEnumerable<Question?>> GetQuestionsByTestId(int testId);
     Task<Question?> GetQuestionById(int questionId);
+    Task<Question> CreateQuestion(Question question);
+    Task<Question> UpdateQuestion(Question question);
+    Task DeleteQuestion(Question question);
 }

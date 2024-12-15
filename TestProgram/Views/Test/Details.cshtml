@@ -1,3 +1,4 @@
+@using TestProgram.Data
 @model TestProgram.Data.Test
 
 @{
@@ -11,21 +12,94 @@
     <h4>Test</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            test name
+        <dt class="col-sm-2">
+            Test Name
         </dt>
-        <dd class = "col-sm-10">
-           @Model.TestName
+        <dd class="col-sm-10">
+            @Model.TestName
         </dd>
-        <dt class = "col-sm-2">
-            created by:
+        <dt class="col-sm-2">
+            Created By
         </dt>
-        <dd class = "col-sm-10">
-            @Model.Teacher.FullName
+        <dd class="col-sm-10">
+            @Model.Teacher?.FullName 
         </dd>
     </dl>
 </div>
+
+<h4>Questions</h4>
+@if (Model.Questions != null && Model.Questions.Any())
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Type</th>
+            <th>Content</th>
+            <th>Details</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            int questionNumber = 1;
+        }
+        @foreach (var question in Model.Questions)
+        {
+            <tr>
+                <td>@questionNumber</td>
+                <td>@question.GetType().Name</td>
+                <td>@question.QuestionText</td>
+                <td>
+                    @switch (question)
+                    {
+                        case MultipleChoiceQuestion mcq:
+                            <div>
+                                <strong>Options:</strong>
+                                <ul>
+                                    @foreach (var option in mcq.Options)
+                                    {
+                                        <li>@option</li>
+                                    }
+                                </ul>
+                                <strong>Correct Answer:</strong> @mcq.CorrectAnswer
+                            </div>
+                            break;
+
+                        case TrueFalseQuestion tfq:
+                            <div>
+                                <strong>Answer:</strong> @(tfq.CorrectAnswer ? "True" : "False")
+                            </div>
+                            break;
+
+                        case TextQuestion eq:
+                            break;
+
+                        default:
+                            <div>No additional details available.</div>
+                            break;
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Question" asp-action="Edit" asp-route-id="@question.Id">Edit</a> |
+                    <a asp-controller="Question" asp-action="Delete" asp-route-id="@question.Id">Delete</a>
+                </td>
+            </tr>
+            questionNumber++;
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No questions have been added to this test.</p>
+}
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Question" asp-action="CreateTrueFalseQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add Question</a>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">Edit Test</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

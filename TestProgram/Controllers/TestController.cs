@@ -58,7 +58,9 @@ public class TestController : Controller
         
         await _testRepository.CreateTest(test);
         
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new { id = test.Id }); // will return to the details method 
+        // so that i can add a button there to create new questions for the test
+        
     }
     
     // details method for the test
@@ -66,7 +68,7 @@ public class TestController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> Details(int id)
     {
-        var test = await _testRepository.GetTestById(id);
+        var test = await _testRepository.GetTestByIdWithQuestions(id);
         return View(test);
     }
     
@@ -96,8 +98,6 @@ public class TestController : Controller
         await _testRepository.DeleteTest(test);
         return RedirectToAction("Index");
     }
-
-
-   
+    
     
 }
