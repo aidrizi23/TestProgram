@@ -96,7 +96,8 @@ else
 }
 
 <div>
-    <a asp-controller="Question" asp-action="CreateTrueFalseQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add Question</a>
+    <a asp-controller="Question" asp-action="CreateTrueFalseQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add tf Question</a>
+    <a asp-controller="Question" asp-action="CreateMultipleChoiceQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add mc Question</a>
 </div>
 
 <div class="mt-3">

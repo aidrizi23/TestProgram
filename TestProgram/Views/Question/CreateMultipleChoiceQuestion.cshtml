@@ -1,0 +1,97 @@
+@model TestProgram.Models.Question.MultipleChoiceForCreationDto
+
+@{
+    ViewData["Title"] = "Create Multiple Choice Question";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create Multiple Choice Question</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="CreateMultipleChoiceQuestion" asp-controller="Question" method="post">
+            <input type="hidden" asp-for="TestId" />
+
+            <div class="form-group">
+                <label asp-for="QuestionText" class="form-label">Question Text</label>
+                <textarea asp-for="QuestionText" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="QuestionText" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Points" class="form-label">Points</label>
+                <input asp-for="Points" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Points" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Options</label>
+                <div id="options-container">
+                    <div class="input-group mb-2">
+                        <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" />
+                        <button type="button" class="btn btn-success set-correct">Set as Correct</button>
+                        <button type="button" class="btn btn-danger remove-option">Remove</button>
+                    </div>
+                </div>
+                <button type="button" id="add-option" class="btn btn-secondary mt-2">Add Option</button>
+                <span asp-validation-for="Options" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
+                <input asp-for="CorrectAnswer" id="correct-answer" class="form-control" readonly placeholder="Select an option to set as the correct answer" />
+                <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Create</button>
+            <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary mt-3">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('add-option').addEventListener('click', function () {
+            const container = document.getElementById('options-container');
+            const newOption = document.createElement('div');
+            newOption.classList.add('input-group', 'mb-2');
+            newOption.innerHTML = `
+                <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" />
+                <button type="button" class="btn btn-success set-correct">Set as Correct</button>
+                <button type="button" class="btn btn-danger remove-option">Remove</button>
+            `;
+            container.appendChild(newOption);
+
+            // Attach event listeners to new buttons
+            newOption.querySelector('.set-correct').addEventListener('click', function () {
+                setCorrectAnswer(newOption.querySelector('.option-input').value);
+            });
+            newOption.querySelector('.remove-option').addEventListener('click', function () {
+                container.removeChild(newOption);
+            });
+        });
+
+        document.querySelectorAll('.set-correct').forEach(button => {
+            button.addEventListener('click', function () {
+                const input = this.closest('.input-group').querySelector('.option-input');
+                setCorrectAnswer(input.value);
+            });
+        });
+
+        document.querySelectorAll('.remove-option').forEach(button => {
+            button.addEventListener('click', function () {
+                const container = document.getElementById('options-container');
+                container.removeChild(this.closest('.input-group'));
+            });
+        });
+
+        function setCorrectAnswer(value) {
+            if (value.trim() === "") {
+                alert("Option cannot be empty!");
+                return;
+            }
+            document.getElementById('correct-answer').value = value;
+        }
+    </script>
+}

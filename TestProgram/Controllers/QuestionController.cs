@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestProgram.Data;
 using TestProgram.Data.Enums;
+using TestProgram.Models.Question;
 using TestProgram.Repository;
 
 namespace TestProgram.Controllers;
@@ -23,7 +24,7 @@ public class QuestionController : Controller
     
     // will have a create controller method for each type of question
     [Authorize]
-    [HttpGet("create")]
+    [HttpGet("tf")]
     public async Task<IActionResult> CreateTrueFalseQuestion(int testId)
     {
         var dto = new TrueFalseQuestion();
@@ -32,7 +33,7 @@ public class QuestionController : Controller
     }
     
     [Authorize]
-    [HttpPost("create")]
+    [HttpPost("tf")]
     public async Task<IActionResult> CreateTrueFalseQuestion(TrueFalseQuestion dto)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -54,6 +55,47 @@ public class QuestionController : Controller
             Type = QuestionType.TrueFalse,
             TestId = dto.TestId,
             CorrectAnswer = dto.CorrectAnswer,
+        };
+        
+        await _questionRepository.CreateQuestion(question);
+        
+        return RedirectToAction("Details", "Test", new { id = dto.TestId });
+    }
+
+
+    [Authorize]
+    [HttpGet("mc")]
+    public async Task<IActionResult> CreateMultipleChoiceQuestion(int testId)
+    {
+        var dto = new MultipleChoiceForCreationDto();
+        dto.TestId = testId;
+        return View(dto);
+    }
+
+    [Authorize]
+    [HttpPost("mc")]
+    public async Task<IActionResult> CreateMultipleChoiceQuestion(MultipleChoiceForCreationDto dto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is not Teacher)
+        {
+            return Unauthorized();
+        }
+        
+        var test = await _testRepository.GetTestById(dto.TestId);
+        if (test is null)
+        {
+            return NotFound();
+        }
+        
+        var question = new MultipleChoiceQuestion()
+        {
+            QuestionText = dto.QuestionText,
+            Points = dto.Points,
+            Type = QuestionType.MultipleChoice,
+            TestId = dto.TestId,
+            CorrectAnswer = dto.CorrectAnswer,
+            Options = dto.Options,
         };
         
         await _questionRepository.CreateQuestion(question);
