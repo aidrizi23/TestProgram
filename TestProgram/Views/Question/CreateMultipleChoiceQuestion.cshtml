@@ -68,7 +68,7 @@
                 setCorrectAnswer(newOption.querySelector('.option-input').value);
             });
             newOption.querySelector('.remove-option').addEventListener('click', function () {
-                container.removeChild(newOption);
+                handleOptionRemoval(newOption);
             });
         });
 
@@ -82,7 +82,8 @@
         document.querySelectorAll('.remove-option').forEach(button => {
             button.addEventListener('click', function () {
                 const container = document.getElementById('options-container');
-                container.removeChild(this.closest('.input-group'));
+                const optionGroup = this.closest('.input-group');
+                handleOptionRemoval(optionGroup);
             });
         });
 
@@ -92,6 +93,20 @@
                 return;
             }
             document.getElementById('correct-answer').value = value;
+        }
+
+        function handleOptionRemoval(optionGroup) {
+            const correctAnswerField = document.getElementById('correct-answer');
+            const optionInput = optionGroup.querySelector('.option-input');
+
+            // Clear the correct answer if the removed option matches the current correct answer
+            if (correctAnswerField.value === optionInput.value) {
+                correctAnswerField.value = "";
+            }
+
+            // Remove the option from the container
+            const container = document.getElementById('options-container');
+            container.removeChild(optionGroup);
         }
     </script>
 }
