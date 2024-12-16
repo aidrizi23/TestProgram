@@ -325,7 +325,7 @@ namespace TestProgram.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e2f11637-eed5-4de1-a289-2bd552acc7b5",
+                            ConcurrencyStamp = "fe1c9196-6fa2-4f43-928a-0ad11efbcbae",
                             Email = "albiidrizi@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Albi",
@@ -333,9 +333,9 @@ namespace TestProgram.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
                             NormalizedUserName = "TEACHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOJdKdX+ylFFmD0eaUJh1m8uDTviQ1lUGF2OpvSRI2t68QO9Nl1p2kdcOuafwA4D4g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGXMOrdbzJuJLV+lt2PkQ2Y57ToosNmJbos5HtQMMlHpR+QOPyUcSsa+GYa6wQyZlA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "20b98aff-4bac-4056-8237-f7e437f953a0",
+                            SecurityStamp = "6c0eb1e3-3558-452c-aed8-b9888c122c6e",
                             TwoFactorEnabled = false,
                             UserName = "teacher"
                         });
@@ -383,7 +383,7 @@ namespace TestProgram.Data.Migrations
                 {
                     b.HasBaseType("TestProgram.Data.Question");
 
-                    b.Property<string>("ExceptedAnswer")
+                    b.Property<string>("ExpectedAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

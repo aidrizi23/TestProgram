@@ -2,9 +2,10 @@ namespace TestProgram.Data;
 
 public class TextQuestion : Question
 {
-    public string ExceptedAnswer { get; set; }
+    public List<string> ExpectedAnswer { get; set; } = new List<string>();
+    
     public override bool ValidateAnswer(object studentAnswer)
     {
-        return studentAnswer.ToString() == ExceptedAnswer;
+        return ExpectedAnswer.Contains(studentAnswer);
     }
 }

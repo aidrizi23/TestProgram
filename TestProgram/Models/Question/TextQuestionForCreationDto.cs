@@ -2,5 +2,5 @@
 
 public class TextQuestionForCreationDto : QuestionForCreationDto
 {
-    public string ExceptedAnswer { get; set; }
+    public List<string> ExpectedAnswer { get; set; } = new List<string>();
 }

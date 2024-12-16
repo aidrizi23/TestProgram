@@ -102,4 +102,44 @@ public class QuestionController : Controller
         
         return RedirectToAction("Details", "Test", new { id = dto.TestId });
     }
+    
+    
+    [Authorize]
+    [HttpGet("text")]
+    public async Task<IActionResult> CreateTextQuestion(int testId)
+    {
+        var dto = new TextQuestionForCreationDto();
+        dto.TestId = testId;
+        return View(dto);
+    }
+    
+    [Authorize]
+    [HttpPost("text")]
+    public async Task<IActionResult> CreateTextQuestion(TextQuestion dto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is not Teacher)
+        {
+            return Unauthorized();
+        }
+        
+        var test = await _testRepository.GetTestById(dto.TestId);
+        if (test is null)
+        {
+            return NotFound();
+        }
+        
+        var question = new TextQuestion()
+        {
+            QuestionText = dto.QuestionText,
+            Points = dto.Points,
+            Type = QuestionType.Text,
+            TestId = dto.TestId,
+            ExpectedAnswer = dto.ExpectedAnswer
+        };
+        
+        await _questionRepository.CreateQuestion(question);
+        
+        return RedirectToAction("Details", "Test", new { id = dto.TestId });
+    }
 }

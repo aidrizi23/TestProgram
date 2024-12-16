@@ -46,6 +46,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVlc3Rpb25cQ3JlYXRlTXVsdGlwbGVDaG9pY2VRdWVzdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/RiderProjects/TestProgram/TestProgram/Views/Question/CreateTextQuestion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVlc3Rpb25cQ3JlYXRlVGV4dFF1ZXN0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/RiderProjects/TestProgram/TestProgram/Views/Question/CreateTrueFalseQuestion.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVlc3Rpb25cQ3JlYXRlVHJ1ZUZhbHNlUXVlc3Rpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
