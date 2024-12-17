@@ -325,7 +325,7 @@ namespace TestProgram.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fe1c9196-6fa2-4f43-928a-0ad11efbcbae",
+                            ConcurrencyStamp = "8517febe-aa66-4831-b876-cffe0d8d8ed6",
                             Email = "albiidrizi@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Albi",
@@ -333,9 +333,9 @@ namespace TestProgram.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
                             NormalizedUserName = "TEACHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGXMOrdbzJuJLV+lt2PkQ2Y57ToosNmJbos5HtQMMlHpR+QOPyUcSsa+GYa6wQyZlA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECQRXwZhPtOMcruyO3OF19CV4iPYbw+g2fBH6xFNKqmMfJM6cDnTqRz6gCPTn9g5mw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c0eb1e3-3558-452c-aed8-b9888c122c6e",
+                            SecurityStamp = "c2fa2c1b-ba9f-40b2-ab87-b4a3fe2b4dc9",
                             TwoFactorEnabled = false,
                             UserName = "teacher"
                         });
@@ -356,6 +356,9 @@ namespace TestProgram.Data.Migrations
                     b.Property<string>("TestName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalPoints")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

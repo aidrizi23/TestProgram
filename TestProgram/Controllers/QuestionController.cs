@@ -8,7 +8,7 @@ using TestProgram.Repository;
 
 namespace TestProgram.Controllers;
 
-[Route("questions")]
+[Route("[controller]")]
 public class QuestionController : Controller
 {
     private readonly IQuestionRepository _questionRepository;
@@ -42,7 +42,7 @@ public class QuestionController : Controller
             return Unauthorized();
         }
         
-        var test = await _testRepository.GetTestById(dto.TestId);
+        var test = await _testRepository.GetTestByIdWithQuestions(dto.TestId);
         if (test is null)
         {
             return NotFound();
@@ -58,6 +58,11 @@ public class QuestionController : Controller
         };
         
         await _questionRepository.CreateQuestion(question);
+        
+        // updating the toatal points of a test
+        test.TotalPoints = test.CalculateTotalPoints();
+        await _testRepository.UpdateTest(test);
+
         
         return RedirectToAction("Details", "Test", new { id = dto.TestId });
     }
@@ -82,7 +87,7 @@ public class QuestionController : Controller
             return Unauthorized();
         }
         
-        var test = await _testRepository.GetTestById(dto.TestId);
+        var test = await _testRepository.GetTestByIdWithQuestions(dto.TestId);
         if (test is null)
         {
             return NotFound();
@@ -99,6 +104,11 @@ public class QuestionController : Controller
         };
         
         await _questionRepository.CreateQuestion(question);
+        
+        // updating the toatal points of a test
+        test.TotalPoints = test.CalculateTotalPoints();
+        await _testRepository.UpdateTest(test);
+
         
         return RedirectToAction("Details", "Test", new { id = dto.TestId });
     }
@@ -123,7 +133,7 @@ public class QuestionController : Controller
             return Unauthorized();
         }
         
-        var test = await _testRepository.GetTestById(dto.TestId);
+        var test = await _testRepository.GetTestByIdWithQuestions(dto.TestId);
         if (test is null)
         {
             return NotFound();
@@ -140,12 +150,46 @@ public class QuestionController : Controller
         
         await _questionRepository.CreateQuestion(question);
         
+        // updating the toatal points of a test
+        test.TotalPoints = test.CalculateTotalPoints();
+        await _testRepository.UpdateTest(test);
+        
+
+        
         return RedirectToAction("Details", "Test", new { id = dto.TestId });
     }
     
     [Authorize]
-    [HttpDelete("delete/{id}")]
+    [HttpGet("delete/{id:int}")]
     public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var test = await _testRepository.GetTestByIdWithQuestions(id);
+        
+        var question = await _questionRepository.GetQuestionById(id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        await _questionRepository.DeleteQuestion(question);
+        
+        // updating the toatal points of a test
+        test.TotalPoints = test.CalculateTotalPoints();
+        await _testRepository.UpdateTest(test);
+
+        
+        return RedirectToAction("Details", "Test", new { id = question.TestId });
+    }
+
+    [Authorize]
+    [HttpGet("edittf/{id:int}")]
+    public async Task<IActionResult> Edit(int id)
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is null)
@@ -159,8 +203,54 @@ public class QuestionController : Controller
             return NotFound();
         }
         
-        await _questionRepository.DeleteQuestion(question);
+        if (question is TrueFalseQuestion)
+        {
+            var dto = new TrueFalseForEditDto()
+            {
+                Id = question.Id,
+                QuestionText = question.QuestionText,
+                Points = question.Points,
+                TestId = question.TestId,
+                CorrectAnswer = ((TrueFalseQuestion) question).CorrectAnswer
+            };
+            return View(dto);
+        }
+      
+        else
+        {
+            return NotFound();
+        }
         
-        return RedirectToAction("Details", "Test", new { id = question.TestId });
+    }
+    
+    [Authorize]
+    [HttpPost("edittf/{id:int}")]
+    public async Task<IActionResult> Edit(TrueFalseForEditDto dto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(dto.Id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        if (question is TrueFalseQuestion)
+        {
+            question.QuestionText = dto.QuestionText;
+            question.Points = dto.Points;
+            ((TrueFalseQuestion) question).CorrectAnswer = dto.CorrectAnswer;
+            await _questionRepository.UpdateQuestion(question);
+            return RedirectToAction("Details", "Test", new { id = question.TestId });
+        }
+        
+        else
+        {
+            return NotFound();
+        }
     }
 }

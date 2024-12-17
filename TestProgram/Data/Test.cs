@@ -10,4 +10,17 @@ public class Test : BaseEntity
     public string TeacherId { get; set; }
     public virtual Teacher Teacher { get; set; }
     
+   
+    public int TotalPoints { get; set; } = 0;
+    
+    public int CalculateTotalPoints()
+    {
+        int total = 0;
+        foreach (var question in Questions)
+        {
+            total += question.Points;
+        }
+        return total;
+    }
+   
 }
