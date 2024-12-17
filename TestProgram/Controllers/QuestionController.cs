@@ -142,4 +142,25 @@ public class QuestionController : Controller
         
         return RedirectToAction("Details", "Test", new { id = dto.TestId });
     }
+    
+    [Authorize]
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        await _questionRepository.DeleteQuestion(question);
+        
+        return RedirectToAction("Details", "Test", new { id = question.TestId });
+    }
 }
