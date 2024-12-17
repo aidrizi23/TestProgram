@@ -253,4 +253,140 @@ public class QuestionController : Controller
             return NotFound();
         }
     }
+    
+    [Authorize]
+    [HttpGet("editmc/{id:int}")]
+    public async Task<IActionResult> EditMultipleChoice(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        if (question is MultipleChoiceQuestion)
+        {
+            var dto = new MultipleChoiceForEditDto()
+            {
+                Id = question.Id,
+                QuestionText = question.QuestionText,
+                Points = question.Points,
+                TestId = question.TestId,
+                CorrectAnswer = ((MultipleChoiceQuestion) question).CorrectAnswer,
+                Options = ((MultipleChoiceQuestion) question).Options
+            };
+            return View(dto);
+        }
+      
+        else
+        {
+            return NotFound();
+        }
+        
+    }
+    
+    [Authorize]
+    [HttpPost("editmc/{id:int}")]
+    public async Task<IActionResult> EditMultipleChoice(MultipleChoiceForEditDto dto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(dto.Id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        if (question is MultipleChoiceQuestion)
+        {
+            question.QuestionText = dto.QuestionText;
+            question.Points = dto.Points;
+            ((MultipleChoiceQuestion) question).CorrectAnswer = dto.CorrectAnswer;
+            ((MultipleChoiceQuestion) question).Options = dto.Options;
+            await _questionRepository.UpdateQuestion(question);
+            return RedirectToAction("Details", "Test", new { id = question.TestId });
+        }
+        
+        else
+        {
+            return NotFound();
+        }
+    }
+    
+    [Authorize]
+    [HttpGet("edittext/{id:int}")]
+    public async Task<IActionResult> EditText(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        if (question is TextQuestion)
+        {
+            var dto = new TextQuestionForEditDto()
+            {
+                Id = question.Id,
+                QuestionText = question.QuestionText,
+                Points = question.Points,
+                TestId = question.TestId,
+                ExpectedAnswer = ((TextQuestion) question).ExpectedAnswer
+            };
+            return View(dto);
+        }
+      
+        else
+        {
+            return NotFound();
+        }
+        
+    }
+    
+    [Authorize]
+    [HttpPost("edittext/{id:int}")]
+    public async Task<IActionResult> EditText(TextQuestionForEditDto dto)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+        
+        var question = await _questionRepository.GetQuestionById(dto.Id);
+        if (question is null)
+        {
+            return NotFound();
+        }
+        
+        if (question is TextQuestion)
+        {
+            question.QuestionText = dto.QuestionText;
+            question.Points = dto.Points;
+            ((TextQuestion) question).ExpectedAnswer = dto.ExpectedAnswer;
+            await _questionRepository.UpdateQuestion(question);
+            return RedirectToAction("Details", "Test", new { id = question.TestId });
+        }
+        
+        else
+        {
+            return NotFound();
+        }
+    }
 }
