@@ -30,6 +30,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<ITestSubmissionRepository, TestSubmissionRepository>();
 
 var app = builder.Build();
 

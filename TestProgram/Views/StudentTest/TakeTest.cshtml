@@ -1,0 +1,53 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestProgram.Data
+@model TestProgram.Models.Student.TakeTestViewModel
+
+<h2>Test: @Model.TestName</h2>
+<p>Student: @Model.FirstName @Model.LastName</p>
+
+<form asp-controller="StudentTest"
+      asp-action="SubmitTest"
+      asp-route-testId="@Model.TestId"
+      method="post">
+
+    <input type="hidden" asp-for="TestId" />
+    <input type="hidden" asp-for="FirstName" />
+    <input type="hidden" asp-for="LastName" />
+
+    @foreach (var question in Model.Questions)
+    {
+        <div class="card mb-3">
+            <div class="card-body"> 
+                <h5 class="card-title">@question.QuestionText</h5>
+                @switch (question)
+                {
+                    case TrueFalseQuestion tf:
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-true" value="True">
+                            <label class="form-check-label" for="@question.Id-true">True</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-false" value="False">
+                            <label class="form-check-label" for="@question.Id-false">False</label>
+                        </div>
+                        break;
+                    case MultipleChoiceQuestion mc:
+                        @foreach (var option in mc.Options)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-@option" value="@option">
+                                <label class="form-check-label" for="@question.Id-@option">@option</label>
+                            </div>
+                        }
+                        break;
+                    case TextQuestion:
+                        <textarea class="form-control" name="Answers[@question.Id]" rows="3"></textarea>
+                        break;
+                }
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Submit Test</button>
+</form>
+

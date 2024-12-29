@@ -1,0 +1,24 @@
+@model string
+
+<h2>Test Link</h2>
+
+<p>Share this link with your students to allow them to take the test:</p>
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" value="@Model" id="testLink" readonly>
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" onclick="copyLink()">Copy</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyLink() {
+            var copyText = document.getElementById("testLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            alert("Copied the link: " + copyText.value);
+        }
+    </script>
+}

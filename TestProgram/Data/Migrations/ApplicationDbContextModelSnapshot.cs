@@ -224,6 +224,36 @@ namespace TestProgram.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TestProgram.Controllers.StudentAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Score")
+                        .HasColumnType("real");
+
+                    b.Property<int>("TestSubmissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TestSubmissionId");
+
+                    b.ToTable("StudentAnswers");
+                });
+
             modelBuilder.Entity("TestProgram.Data.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -325,7 +355,7 @@ namespace TestProgram.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8517febe-aa66-4831-b876-cffe0d8d8ed6",
+                            ConcurrencyStamp = "4a54af12-b272-4a7b-a85b-1a5f29bd893b",
                             Email = "albiidrizi@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Albi",
@@ -333,9 +363,9 @@ namespace TestProgram.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
                             NormalizedUserName = "TEACHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAECQRXwZhPtOMcruyO3OF19CV4iPYbw+g2fBH6xFNKqmMfJM6cDnTqRz6gCPTn9g5mw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBEL3L4vTAWaQw7MRU1eVclQSbe0XBOkW5NnpXy5yYkns3SSRhVwK1ZeGCy4XIkG+A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c2fa2c1b-ba9f-40b2-ab87-b4a3fe2b4dc9",
+                            SecurityStamp = "889be437-6903-48d6-a85e-d88bac918b6f",
                             TwoFactorEnabled = false,
                             UserName = "teacher"
                         });
@@ -365,6 +395,40 @@ namespace TestProgram.Data.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Tests");
+                });
+
+            modelBuilder.Entity("TestProgram.Data.TestSubmission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("StudentFirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("StudentLastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("SubmissionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("TotalScore")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("TestSubmissions");
                 });
 
             modelBuilder.Entity("TestProgram.Data.MultipleChoiceQuestion", b =>
@@ -460,6 +524,25 @@ namespace TestProgram.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TestProgram.Controllers.StudentAnswer", b =>
+                {
+                    b.HasOne("TestProgram.Data.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TestProgram.Data.TestSubmission", "TestSubmission")
+                        .WithMany("Answers")
+                        .HasForeignKey("TestSubmissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+
+                    b.Navigation("TestSubmission");
+                });
+
             modelBuilder.Entity("TestProgram.Data.Question", b =>
                 {
                     b.HasOne("TestProgram.Data.Test", "Test")
@@ -482,9 +565,25 @@ namespace TestProgram.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("TestProgram.Data.TestSubmission", b =>
+                {
+                    b.HasOne("TestProgram.Data.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Test");
+                });
+
             modelBuilder.Entity("TestProgram.Data.Test", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("TestProgram.Data.TestSubmission", b =>
+                {
+                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

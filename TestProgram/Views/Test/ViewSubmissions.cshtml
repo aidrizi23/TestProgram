@@ -1,0 +1,27 @@
+@model TestProgram.Models.Test.TestSubmissionsViewModel
+
+<h2>Submissions for Test: @Model.TestName</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Student Name</th>
+        <th>Submission Time</th>
+        <th>Total Score</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var submission in Model.Submissions)
+    {
+        <tr>
+            <td>@submission.StudentFullName</td>
+            <td>@submission.SubmissionTime.ToString("g")</td>
+            <td>@submission.TotalScore</td>
+            <td>
+                <a asp-action="ReviewSubmission" asp-route-id="@submission.Id" class="btn btn-sm btn-primary">Review</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

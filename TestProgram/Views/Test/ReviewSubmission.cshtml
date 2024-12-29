@@ -1,0 +1,61 @@
+@model TestProgram.Models.Test.TestSubmissionViewModel
+
+<h2>Review Submission</h2>
+
+<h3>Test: @Model.TestName</h3>
+<p>Student: @Model.StudentFullName</p>
+<p>Submission Time: @Model.SubmissionTime.ToString("g")</p>
+<p>Total Score: <span id="totalScore">@Model.TotalScore</span></p>
+
+<form id="reviewForm">
+    @foreach (var answer in Model.Answers)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@answer.QuestionText</h5>
+                <p>Student's Answer: @answer.StudentAnswer</p>
+                <div class="form-group">
+                    <label for="score-@answer.QuestionId">Score:</label>
+                    <input type="number" id="score-@answer.QuestionId" name="score-@answer.QuestionId" 
+                           class="form-control score-input" value="@answer.Score" 
+                           min="0" max="@answer.MaxScore" step="0.5" />
+                    <small class="form-text text-muted">Max score: @answer.MaxScore</small>
+                </div>
+            </div>
+        </div>
+    }
+    <button type="submit" class="btn btn-primary">Update Scores</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#reviewForm').on('submit', function(e) {
+                e.preventDefault();
+                var answers = [];
+                $('.score-input').each(function() {
+                    var questionId = $(this).attr('id').split('-')[1];
+                    answers.push({
+                        questionId: parseInt(questionId),
+                        score: parseFloat($(this).val())
+                    });
+                });
+
+                $.ajax({
+                    url: '/tests/submission/@Model.Id',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(answers),
+                    success: function(response) {
+                        $('#totalScore').text(response.totalScore);
+                        alert('Scores updated successfully!');
+                    },
+                    error: function() {
+                        alert('An error occurred while updating scores.');
+                    }
+                });
+            });
+        });
+    </script>
+}
+

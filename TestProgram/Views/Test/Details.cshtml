@@ -104,4 +104,9 @@ else
 <div class="mt-3">
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">Edit Test</a>
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    
+    <a asp-action="GenerateLink" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">Get Test Link</a>
+    
+    <br/>
+    <a asp-action="ViewSubmissions" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">View Submissions</a>
 </div>

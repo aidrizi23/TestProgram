@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+// using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using TestProgram.Controllers;
 
 namespace TestProgram.Data;
 
@@ -17,6 +18,9 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<MultipleChoiceQuestion> MultipleChoiceQuestions { get; set; }
     public DbSet<TrueFalseQuestion> TrueFalseQuestions { get; set; }
     public DbSet<TextQuestion> TextQuestions { get; set; }
+    
+    public DbSet<TestSubmission> TestSubmissions { get; set; }
+    public DbSet<StudentAnswer> StudentAnswers { get; set; }
 
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +32,18 @@ public class ApplicationDbContext : IdentityDbContext
             .HasValue<MultipleChoiceQuestion>("MultipleChoice")
             .HasValue<TextQuestion>("Text")
             .HasValue<TrueFalseQuestion>("TrueFalse");
+        
+        modelBuilder.Entity<TestSubmission>()
+            .HasMany(ts => ts.Answers)
+            .WithOne(sa => sa.TestSubmission)
+            .HasForeignKey(sa => sa.TestSubmissionId)
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete here
+
+
+        modelBuilder.Entity<StudentAnswer>()
+            .HasOne(sa => sa.Question)
+            .WithMany()
+            .HasForeignKey(sa => sa.QuestionId);
         
         // create me a new static teacher with the id of 1
         modelBuilder.Entity<Teacher>().HasData(new Teacher

@@ -13,12 +13,14 @@ public class TestController : Controller
     private readonly ITestRepository _testRepository;
     private readonly IQuestionRepository _questionRepository;
     private readonly UserManager<Teacher> _userManager;
+    private readonly ITestSubmissionRepository _testSubmissionRepository;
     
-    public TestController(ITestRepository testRepository, IQuestionRepository questionRepository, UserManager<Teacher> userManager)
+    public TestController(ITestRepository testRepository, ITestSubmissionRepository  testSubmissionRepository, IQuestionRepository questionRepository, UserManager<Teacher> userManager)
     {
         _testRepository = testRepository;
         _questionRepository = questionRepository;
         _userManager = userManager;
+        _testSubmissionRepository = testSubmissionRepository;
     }
     
     [Authorize]
@@ -99,5 +101,141 @@ public class TestController : Controller
         return RedirectToAction("Index");
     }
     
+    // method to generate a link to this test for other students to access
+    [Authorize]
+    [HttpGet("generate-link/{id}")]
+    public async Task<IActionResult> GenerateLink(int id)
+    {
+       // get the current user (if it is the teacher or not)
+       var teacher =  await _userManager.GetUserAsync(User);
+         if (teacher is not Teacher)
+         {
+              return Unauthorized();
+         }
+         
+            // get the test by id
+        var test = await _testRepository.GetTestById(id);
+        if (test == null)
+        {
+            return NotFound();
+        }
+        
+        // generate a link for the test
+        var testLink = Url.Action("StartTest", "StudentTest", new { testId = test.Id }, Request.Scheme);
+        return View("TestLink", testLink);
+         
+    }
+    
+  [HttpGet("{id}/submissions")]
+        public async Task<IActionResult> ViewSubmissions(int id)
+        {
+            var test = await _testRepository.GetTestById(id);
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user.Id != test.TeacherId)
+            {
+                return Unauthorized();
+            }
+
+            var submissions = await _testSubmissionRepository.GetSubmissionsByTestId(id);
+            var model = new TestSubmissionsViewModel
+            {
+                TestId = id,
+                TestName = test.TestName,
+                Submissions = submissions.Select(s => new TestSubmissionViewModel
+                {
+                    Id = s.Id,
+                    TestId = s.TestId,
+                    TestName = test.TestName,
+                    StudentFullName = $"{s.StudentFirstName} {s.StudentLastName}",
+                    SubmissionTime = s.SubmissionTime,
+                    TotalScore = s.TotalScore
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpGet("submission/{id}")]
+        public async Task<IActionResult> ReviewSubmission(int id)
+        {
+            var submission = await _testSubmissionRepository.GetSubmissionById(id);
+            if (submission == null)
+            {
+                return NotFound();
+            }
+
+            var test = await _testRepository.GetTestById(submission.TestId);
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user.Id != test.TeacherId)
+            {
+                return Unauthorized();
+            }
+
+            var model = new TestSubmissionViewModel
+            {
+                Id = submission.Id,
+                TestId = submission.TestId,
+                TestName = test.TestName,
+                StudentFullName = $"{submission.StudentFirstName} {submission.StudentLastName}",
+                SubmissionTime = submission.SubmissionTime,
+                TotalScore = submission.TotalScore,
+                Answers = submission.Answers.Select(a => new StudentAnswerViewModel
+                {
+                    QuestionId = a.QuestionId,
+                    QuestionText = a.Question.QuestionText,
+                    StudentAnswer = a.Answer,
+                    Score = a.Score,
+                    MaxScore = a.Question.Points
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost("submission/{id}")]
+        public async Task<IActionResult> UpdateSubmissionScores(int id, [FromBody] List<StudentAnswerViewModel> answers)
+        {
+            var submission = await _testSubmissionRepository.GetSubmissionById(id);
+            if (submission == null)
+            {
+                return NotFound();
+            }
+
+            var test = await _testRepository.GetTestById(submission.TestId);
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user.Id != test.TeacherId)
+            {
+                return Unauthorized();
+            }
+
+            foreach (var answer in answers)
+            {
+                var submissionAnswer = submission.Answers.FirstOrDefault(a => a.QuestionId == answer.QuestionId);
+                if (submissionAnswer != null)
+                {
+                    submissionAnswer.Score = answer.Score;
+                }
+            }
+
+            submission.TotalScore = submission.Answers.Sum(a => a.Score);
+            await _testSubmissionRepository.UpdateSubmission(submission);
+
+            return Ok(new { TotalScore = submission.TotalScore });
+        }
     
 }

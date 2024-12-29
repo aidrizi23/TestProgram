@@ -1,0 +1,11 @@
+@model TestProgram.Models.Test.TestSubmissionViewModel
+
+<h2>Thank You for Completing the Test</h2>
+
+<p>Name: @Model.StudentFullName</p>
+<p>Test: @Model.TestName</p>
+<p>Total Score: @Model.TotalScore</p>
+
+<p>Your responses have been recorded. The teacher will review your answers and provide your final score.</p>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>

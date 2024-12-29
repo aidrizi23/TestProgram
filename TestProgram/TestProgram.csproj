@@ -20,7 +20,7 @@
     <ItemGroup>
       <Folder Include="Views\Account\" />
       <Folder Include="Views\Question\" />
-      <Folder Include="Views\Test\" />
+      <Folder Include="Views\StudentTest\" />
     </ItemGroup>
 
 </Project>
