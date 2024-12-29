@@ -31,7 +31,7 @@ public class TestRepository : ITestRepository
     {
         return await _context.Tests
             .Include(x => x.Teacher)
-            .Include(x => x.Questions)
+            .Include(x => x.Questions.Where(x => x.TestId == id))
             .FirstOrDefaultAsync();
     }
     
