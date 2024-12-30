@@ -4,50 +4,132 @@
 
 <h2>Test: @Model.TestName</h2>
 <p>Student: @Model.FirstName @Model.LastName</p>
+<p>Question @(Model.CurrentQuestionIndex + 1) of @Model.TotalQuestions</p>
 
-<form asp-controller="StudentTest"
-      asp-action="SubmitTest"
-      asp-route-testId="@Model.TestId"
-      method="post">
-
+<form id="testForm" asp-controller="StudentTest" asp-action="SubmitTest" asp-route-testId="@Model.TestId" method="post">
     <input type="hidden" asp-for="TestId" />
     <input type="hidden" asp-for="FirstName" />
     <input type="hidden" asp-for="LastName" />
 
-    @foreach (var question in Model.Questions)
-    {
-        <div class="card mb-3">
-            <div class="card-body"> 
-                <h5 class="card-title">@question.QuestionText</h5>
-                @switch (question)
-                {
-                    case TrueFalseQuestion tf:
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-true" value="True">
-                            <label class="form-check-label" for="@question.Id-true">True</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-false" value="False">
-                            <label class="form-check-label" for="@question.Id-false">False</label>
-                        </div>
-                        break;
-                    case MultipleChoiceQuestion mc:
-                        @foreach (var option in mc.Options)
-                        {
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="Answers[@question.Id]" id="@question.Id-@option" value="@option">
-                                <label class="form-check-label" for="@question.Id-@option">@option</label>
-                            </div>
-                        }
-                        break;
-                    case TextQuestion:
-                        <textarea class="form-control" name="Answers[@question.Id]" rows="3"></textarea>
-                        break;
-                }
-            </div>
-        </div>
+    @{
+        var currentQuestion = Model.Questions.ElementAt(Model.CurrentQuestionIndex);
     }
 
-    <button type="submit" class="btn btn-primary">Submit Test</button>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@currentQuestion.QuestionText</h5>
+            @switch (currentQuestion)
+            {
+                case TrueFalseQuestion tf:
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Answers[@currentQuestion.Id]" id="@currentQuestion.Id-true" value="True">
+                        <label class="form-check-label" for="@currentQuestion.Id-true">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Answers[@currentQuestion.Id]" id="@currentQuestion.Id-false" value="False">
+                        <label class="form-check-label" for="@currentQuestion.Id-false">False</label>
+                    </div>
+                    break;
+                case MultipleChoiceQuestion mc:
+                    @foreach (var option in mc.Options)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Answers[@currentQuestion.Id]" id="@currentQuestion.Id-@option" value="@option">
+                            <label class="form-check-label" for="@currentQuestion.Id-@option">@option</label>
+                        </div>
+                    }
+                    break;
+                case TextQuestion:
+                    <textarea class="form-control" name="Answers[@currentQuestion.Id]" rows="3"></textarea>
+                    break;
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <button type="button" id="prevButton" class="btn btn-secondary" @(Model.CurrentQuestionIndex == 0 ? "disabled" : "")>Previous</button>
+        <button type="button" id="nextButton" class="btn btn-primary" @(Model.CurrentQuestionIndex == Model.TotalQuestions - 1 ? "style=display:none" : "")>Next</button>
+        <button type="submit" id="submitButton" class="btn btn-success" style="display: none;">Submit Test</button>
+    </div>
 </form>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var currentIndex = @Model.CurrentQuestionIndex;
+        var totalQuestions = @Model.TotalQuestions;
+        var answers = {};
+
+        function updateButtons() {
+            $('#prevButton').prop('disabled', currentIndex === 0);
+            if (currentIndex === totalQuestions - 1) {
+                $('#nextButton').hide();
+                $('#submitButton').show();
+            } else {
+                $('#nextButton').show();
+                $('#submitButton').hide();
+            }
+        }
+
+        // Save answer before navigation
+        function saveCurrentAnswer() {
+            var currentQuestionId = $('.card').find('input, textarea').first().attr('name').match(/\d+/)[0];
+            var answer = $('[name="Answers[' + currentQuestionId + ']"]:checked').val() ||
+                $('[name="Answers[' + currentQuestionId + ']"]').val();
+            if (answer) {
+                answers[currentQuestionId] = answer;
+            }
+        }
+
+        function navigateToQuestion() {
+            saveCurrentAnswer();
+            var url = '@Url.Action("TakeTest", "StudentTest", new { testId = Model.TestId })' +
+                '?firstName=' + encodeURIComponent('@Model.FirstName') +
+                '&lastName=' + encodeURIComponent('@Model.LastName') +
+                '&currentQuestionIndex=' + currentIndex;
+
+            // Store answers in sessionStorage
+            sessionStorage.setItem('testAnswers', JSON.stringify(answers));
+            window.location.href = url;
+        }
+
+        // Load previous answers
+        var savedAnswers = sessionStorage.getItem('testAnswers');
+        if (savedAnswers) {
+            answers = JSON.parse(savedAnswers);
+            var currentQuestionId = $('.card').find('input, textarea').first().attr('name').match(/\d+/)[0];
+            var savedAnswer = answers[currentQuestionId];
+
+            if (savedAnswer) {
+                $('[name="Answers[' + currentQuestionId + ']"][value="' + savedAnswer + '"]').prop('checked', true);
+                $('[name="Answers[' + currentQuestionId + ']"]').val(savedAnswer);
+            }
+        }
+
+        $('#prevButton').click(function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                navigateToQuestion();
+            }
+        });
+
+        $('#nextButton').click(function() {
+            if (currentIndex < totalQuestions - 1) {
+                currentIndex++;
+                navigateToQuestion();
+            }
+        });
+
+        $('#testForm').submit(function() {
+            saveCurrentAnswer();
+            // Add all saved answers as hidden fields
+            Object.keys(answers).forEach(function(questionId) {
+                $(this).append('<input type="hidden" name="Answers[' + questionId + ']" value="' + answers[questionId] + '">');
+            }.bind(this));
+            sessionStorage.removeItem('testAnswers');
+            return true;
+        });
+
+        updateButtons();
+    });
+</script>

@@ -24,5 +24,7 @@ namespace TestProgram.Models.Student
         public string LastName { get; set; }
         public IEnumerable<Data.Question> Questions { get; set; }
         public Dictionary<int, string> Answers { get; set; } = new Dictionary<int, string>();
+        public int CurrentQuestionIndex { get; set; } // New property for pagination
+        public int TotalQuestions { get; set; } // New property for pagination
     }
 }
