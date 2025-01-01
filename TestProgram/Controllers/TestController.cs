@@ -237,5 +237,28 @@ public class TestController : Controller
 
             return Ok(new { TotalScore = submission.TotalScore });
         }
+
+        [Authorize]
+        [HttpPost("lock/{id}")]
+        public async Task<IActionResult> LockTest(int id)
+        {
+            var test = await _testRepository.GetTestById(id);
+            if (test == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user.Id != test.TeacherId)
+            {
+                return Unauthorized();
+            }
+
+            test.IsLocked = !test.IsLocked;
+            await _testRepository.UpdateTest(test);
+
+            return Json(new { isLocked = test.IsLocked });
+        }
+
     
 }

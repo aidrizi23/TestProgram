@@ -109,4 +109,34 @@ else
     
     <br/>
     <a asp-action="ViewSubmissions" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">View Submissions</a>
+
+    <button id="lockToggleBtn" class="btn @(Model.IsLocked ? "btn-success" : "btn-danger")">
+        @(Model.IsLocked ? "Unlock Test" : "Lock Test")
+    </button>
 </div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#lockToggleBtn').click(function() {
+                var testId = @Model.Id;
+                $.ajax({
+                    url: '@Url.Action("LockTest", "Test", new { id = "__id__" })'.replace("__id__", testId),
+                    type: 'POST',
+                    success: function(result) {
+                        if (result.isLocked) {
+                            $('#lockToggleBtn').removeClass('btn-danger').addClass('btn-success').text('Unlock Test');
+                        } else {
+                            $('#lockToggleBtn').removeClass('btn-success').addClass('btn-danger').text('Lock Test');
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while processing your request.');
+                    }
+                });
+            });
+        });
+    </script>
+}
