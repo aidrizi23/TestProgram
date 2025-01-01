@@ -150,69 +150,157 @@ public class StudentTestController : Controller
         return View(model);
     }
 
+    // [HttpPost("{testId}/submit")]
+    // public async Task<IActionResult> SubmitTest(int testId, TakeTestViewModel model)
+    // {
+    //     var test = await _testRepository.GetTestByIdWithQuestions(testId);
+    //     if (test == null)
+    //     {
+    //         return NotFound();
+    //     }
+    //
+    //     var submission = new TestSubmission
+    //     {
+    //         TestId = testId,
+    //         StudentFirstName = model.FirstName,
+    //         StudentLastName = model.LastName,
+    //         SubmissionTime = DateTime.UtcNow,
+    //         Answers = model.Answers.Select(a => new StudentAnswer
+    //         {
+    //             QuestionId = a.Key,
+    //             Answer = a.Value
+    //         }).ToList()
+    //     };
+    //
+    //     AutoGradeSubmission(submission, test.Questions);
+    //
+    //     await _testSubmissionRepository.CreateSubmission(submission);
+    //
+    //     var submissionViewModel = new TestSubmissionViewModel
+    //     {
+    //         Id = submission.Id,
+    //         TestId = submission.TestId,
+    //         TestName = test.TestName,
+    //         StudentFullName = $"{submission.StudentFirstName} {submission.StudentLastName}",
+    //         SubmissionTime = submission.SubmissionTime,
+    //         TotalScore = submission.TotalScore,
+    //         Answers = submission.Answers.Select(a => new StudentAnswerViewModel
+    //         {
+    //             QuestionId = a.QuestionId,
+    //             QuestionText = test.Questions.First(q => q.Id == a.QuestionId).QuestionText,
+    //             StudentAnswer = a.Answer,
+    //             Score = a.Score,
+    //             MaxScore = test.Questions.First(q => q.Id == a.QuestionId).Points
+    //         }).ToList()
+    //     };
+    //     submission.StudentLastName = model.LastName;
+    //     submission.StudentFirstName = model.FirstName;
+    //
+    //     return View("ThankYou", submissionViewModel);
+    // }
+    //
+    //
+    //
+    //
+    //
+    //
+    // private void AutoGradeSubmission(TestSubmission submission, IEnumerable<Question> questions)
+    // {
+    //     float totalScore = 0;
+    //
+    //     foreach (var answer in submission.Answers)
+    //     {
+    //         var question = questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+    //         if (question == null) continue;
+    //
+    //         switch (question)
+    //         {
+    //             case TrueFalseQuestion tf:
+    //                 answer.Score = answer.Answer.Equals(tf.CorrectAnswer.ToString(), StringComparison.OrdinalIgnoreCase) ? tf.Points : 0;
+    //                 break;
+    //             case MultipleChoiceQuestion mc:
+    //                 answer.Score = answer.Answer.Equals(mc.CorrectAnswer, StringComparison.OrdinalIgnoreCase) ? mc.Points : 0;
+    //                 break;
+    //             case TextQuestion tq:
+    //                 // For text questions, we'll set a default score of 0 and let the teacher grade it manually
+    //                 answer.Score = 0;
+    //                 break;
+    //         }
+    //
+    //         totalScore += answer.Score;
+    //     }
+    //
+    //     submission.TotalScore = totalScore;
+    // }
+    
+    
     [HttpPost("{testId}/submit")]
-    public async Task<IActionResult> SubmitTest(int testId, TakeTestViewModel model)
+public async Task<IActionResult> SubmitTest(int testId, TakeTestViewModel model)
+{
+    var test = await _testRepository.GetTestByIdWithQuestions(testId);
+    if (test == null)
     {
-        var test = await _testRepository.GetTestByIdWithQuestions(testId);
-        if (test == null)
-        {
-            return NotFound();
-        }
-
-        var submission = new TestSubmission
-        {
-            TestId = testId,
-            StudentFirstName = model.FirstName,
-            StudentLastName = model.LastName,
-            SubmissionTime = DateTime.UtcNow,
-            Answers = model.Answers.Select(a => new StudentAnswer
-            {
-                QuestionId = a.Key,
-                Answer = a.Value
-            }).ToList()
-        };
-
-        AutoGradeSubmission(submission, test.Questions);
-
-        await _testSubmissionRepository.CreateSubmission(submission);
-
-        var submissionViewModel = new TestSubmissionViewModel
-        {
-            Id = submission.Id,
-            TestId = submission.TestId,
-            TestName = test.TestName,
-            StudentFullName = $"{submission.StudentFirstName} {submission.StudentLastName}",
-            SubmissionTime = submission.SubmissionTime,
-            TotalScore = submission.TotalScore,
-            Answers = submission.Answers.Select(a => new StudentAnswerViewModel
-            {
-                QuestionId = a.QuestionId,
-                QuestionText = test.Questions.First(q => q.Id == a.QuestionId).QuestionText,
-                StudentAnswer = a.Answer,
-                Score = a.Score,
-                MaxScore = test.Questions.First(q => q.Id == a.QuestionId).Points
-            }).ToList()
-        };
-        submission.StudentLastName = model.LastName;
-        submission.StudentFirstName = model.FirstName;
-
-        return View("ThankYou", submissionViewModel);
+        return NotFound();
     }
 
+    // Initialize an empty answers collection if none provided
+    model.Answers = model.Answers ?? new Dictionary<int, string>();
 
-
-
-
-
-    private void AutoGradeSubmission(TestSubmission submission, IEnumerable<Question> questions)
+    var submission = new TestSubmission
     {
-        float totalScore = 0;
-
-        foreach (var answer in submission.Answers)
+        TestId = testId,
+        StudentFirstName = model.FirstName,
+        StudentLastName = model.LastName,
+        SubmissionTime = DateTime.UtcNow,
+        // Create an answer entry for each question, even if not answered
+        Answers = test.Questions.Select(q => new StudentAnswer
         {
-            var question = questions.FirstOrDefault(q => q.Id == answer.QuestionId);
-            if (question == null) continue;
+            QuestionId = q.Id,
+            Answer = model.Answers.ContainsKey(q.Id) ? model.Answers[q.Id]?.Trim() ?? "" : "",
+            Score = 0 // Initialize score to 0
+        }).ToList()
+    };
 
+    AutoGradeSubmission(submission, test.Questions);
+
+    await _testSubmissionRepository.CreateSubmission(submission);
+
+    var submissionViewModel = new TestSubmissionViewModel
+    {
+        Id = submission.Id,
+        TestId = submission.TestId,
+        TestName = test.TestName,
+        StudentFullName = $"{submission.StudentFirstName} {submission.StudentLastName}",
+        SubmissionTime = submission.SubmissionTime,
+        TotalScore = submission.TotalScore,
+        Answers = submission.Answers.Select(a => new StudentAnswerViewModel
+        {
+            QuestionId = a.QuestionId,
+            QuestionText = test.Questions.First(q => q.Id == a.QuestionId).QuestionText,
+            StudentAnswer = a.Answer,
+            Score = a.Score,
+            MaxScore = test.Questions.First(q => q.Id == a.QuestionId).Points
+        }).ToList()
+    };
+
+    return View("ThankYou", submissionViewModel);
+}
+
+private void AutoGradeSubmission(TestSubmission submission, IEnumerable<Question> questions)
+{
+    float totalScore = 0;
+
+    foreach (var answer in submission.Answers)
+    {
+        var question = questions.FirstOrDefault(q => q.Id == answer.QuestionId);
+        if (question == null) continue;
+
+        // Initialize score to 0
+        answer.Score = 0;
+
+        // Only grade if there's actually an answer
+        if (!string.IsNullOrWhiteSpace(answer.Answer))
+        {
             switch (question)
             {
                 case TrueFalseQuestion tf:
@@ -221,15 +309,15 @@ public class StudentTestController : Controller
                 case MultipleChoiceQuestion mc:
                     answer.Score = answer.Answer.Equals(mc.CorrectAnswer, StringComparison.OrdinalIgnoreCase) ? mc.Points : 0;
                     break;
-                case TextQuestion tq:
-                    // For text questions, we'll set a default score of 0 and let the teacher grade it manually
-                    answer.Score = 0;
+                case TextQuestion:
+                    // Text questions still get 0 for manual grading
                     break;
             }
-
-            totalScore += answer.Score;
         }
 
-        submission.TotalScore = totalScore;
+        totalScore += answer.Score;
     }
+
+    submission.TotalScore = totalScore;
+}
 }

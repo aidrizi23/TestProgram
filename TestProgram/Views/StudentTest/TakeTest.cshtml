@@ -71,13 +71,22 @@
             }
         }
 
-        // Save answer before navigation
         function saveCurrentAnswer() {
             var currentQuestionId = $('.card').find('input, textarea').first().attr('name').match(/\d+/)[0];
-            var answer = $('[name="Answers[' + currentQuestionId + ']"]:checked').val() ||
-                $('[name="Answers[' + currentQuestionId + ']"]').val();
-            if (answer) {
-                answers[currentQuestionId] = answer;
+            var $radios = $('[name="Answers[' + currentQuestionId + ']"]');
+
+            if ($radios.is(':radio')) {
+                // For radio buttons (True/False and Multiple Choice)
+                var checkedValue = $radios.filter(':checked').val();
+                if (checkedValue) {
+                    answers[currentQuestionId] = checkedValue;
+                }
+            } else {
+                // For textarea
+                var textValue = $radios.val();
+                if (textValue) {
+                    answers[currentQuestionId] = textValue;
+                }
             }
         }
 
@@ -101,8 +110,14 @@
             var savedAnswer = answers[currentQuestionId];
 
             if (savedAnswer) {
-                $('[name="Answers[' + currentQuestionId + ']"][value="' + savedAnswer + '"]').prop('checked', true);
-                $('[name="Answers[' + currentQuestionId + ']"]').val(savedAnswer);
+                var $radio = $('[name="Answers[' + currentQuestionId + ']"][value="' + savedAnswer + '"]');
+                var $textarea = $('[name="Answers[' + currentQuestionId + ']"]');
+
+                if ($radio.length) {
+                    $radio.prop('checked', true);
+                } else if ($textarea.length) {
+                    $textarea.val(savedAnswer);
+                }
             }
         }
 
@@ -122,10 +137,16 @@
 
         $('#testForm').submit(function() {
             saveCurrentAnswer();
-            // Add all saved answers as hidden fields
+            // Remove any existing hidden fields
+            $('input[type="hidden"][name^="Answers["]').remove();
+
+            // Add only the answered questions as hidden fields
             Object.keys(answers).forEach(function(questionId) {
-                $(this).append('<input type="hidden" name="Answers[' + questionId + ']" value="' + answers[questionId] + '">');
+                if (answers[questionId]) {  // Only add if there's actually an answer
+                    $(this).append('<input type="hidden" name="Answers[' + questionId + ']" value="' + answers[questionId] + '">');
+                }
             }.bind(this));
+
             sessionStorage.removeItem('testAnswers');
             return true;
         });
