@@ -355,7 +355,7 @@ namespace TestProgram.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4a54af12-b272-4a7b-a85b-1a5f29bd893b",
+                            ConcurrencyStamp = "3f9c0dba-bc81-4db6-9249-f72288f872de",
                             Email = "albiidrizi@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Albi",
@@ -363,9 +363,9 @@ namespace TestProgram.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
                             NormalizedUserName = "TEACHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBEL3L4vTAWaQw7MRU1eVclQSbe0XBOkW5NnpXy5yYkns3SSRhVwK1ZeGCy4XIkG+A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENRbuqiyMDc9nrjG9+XScpMGrUiM7WUvRk/MruocAEp6teio521RzoiNrFH+eFXFlg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "889be437-6903-48d6-a85e-d88bac918b6f",
+                            SecurityStamp = "2a4125b9-739f-40ed-8051-65b642bb8c52",
                             TwoFactorEnabled = false,
                             UserName = "teacher"
                         });
@@ -378,6 +378,9 @@ namespace TestProgram.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
 
                     b.Property<string>("TeacherId")
                         .IsRequired()

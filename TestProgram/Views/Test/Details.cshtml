@@ -1,3 +1,118 @@
+@* @using TestProgram.Data *@
+@* @model TestProgram.Data.Test *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Details"; *@
+@*     Layout = "~/Views/Shared/_Layout.cshtml"; *@
+@* } *@
+@* *@
+@* <h1>Details</h1> *@
+@* *@
+@* <div> *@
+@*     <h4>Test</h4> *@
+@*     <hr /> *@
+@*     <dl class="row"> *@
+@*         <dt class="col-sm-2"> *@
+@*             Test Name *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Model.TestName *@
+@*         </dd> *@
+@*         <dt class="col-sm-2"> *@
+@*             Created By *@
+@*         </dt> *@
+@*         <dd class="col-sm-10"> *@
+@*             @Model.Teacher?.FullName  *@
+@*         </dd> *@
+@*     </dl> *@
+@* </div> *@
+@* *@
+@* <h4>Questions</h4> *@
+@* @if (Model.Questions != null && Model.Questions.Any()) *@
+@* { *@
+@*     <table class="table"> *@
+@*         <thead> *@
+@*         <tr> *@
+@*             <th>#</th> *@
+@*             <th>Type</th> *@
+@*             <th>Content</th> *@
+@*             <th>Details</th> *@
+@*             <th>Actions</th> *@
+@*         </tr> *@
+@*         </thead> *@
+@*         <tbody> *@
+@*         @{ *@
+@*             int questionNumber = 1; *@
+@*         } *@
+@*         @foreach (var question in Model.Questions) *@
+@*         { *@
+@*             <tr> *@
+@*                 <td>@questionNumber</td> *@
+@*                 <td>@question.GetType().Name</td> *@
+@*                 <td>@question.QuestionText</td> *@
+@*                 <td> *@
+@*                     @switch (question) *@
+@*                     { *@
+@*                         case MultipleChoiceQuestion mcq: *@
+@*                             <div> *@
+@*                                 <strong>Options:</strong> *@
+@*                                 <ul> *@
+@*                                     @foreach (var option in mcq.Options) *@
+@*                                     { *@
+@*                                         <li>@option</li> *@
+@*                                     } *@
+@*                                 </ul> *@
+@*                                 <strong>Correct Answer:</strong> @mcq.CorrectAnswer *@
+@*                             </div> *@
+@*                             break; *@
+@* *@
+@*                         case TrueFalseQuestion tfq: *@
+@*                             <div> *@
+@*                                 <strong>Answer:</strong> @(tfq.CorrectAnswer ? "True" : "False") *@
+@*                             </div> *@
+@*                             break; *@
+@* *@
+@*                         case TextQuestion eq: *@
+@*                             break; *@
+@* *@
+@*                         default: *@
+@*                             <div>No additional details available.</div> *@
+@*                             break; *@
+@*                     } *@
+@*                 </td> *@
+@*                 <td> *@
+@*                     <a asp-controller="Question" asp-action="Edit" asp-route-id="@question.Id">Edit</a> | *@
+@*                     <a asp-controller="Question" asp-action="Delete" asp-route-id="@question.Id">Delete</a> *@
+@*                 </td> *@
+@*             </tr> *@
+@*             questionNumber++; *@
+@*         } *@
+@*         </tbody> *@
+@*     </table> *@
+@* } *@
+@* else *@
+@* { *@
+@*     <p>No questions have been added to this test.</p> *@
+@* } *@
+@* *@
+@* <div> *@
+@*     <a asp-controller="Question" asp-action="CreateTrueFalseQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add tf Question</a> *@
+@*     <a asp-controller="Question" asp-action="CreateMultipleChoiceQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add mc Question</a> *@
+@*    <a asp-controller="Question" asp-action="CreateTextQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add mc Question</a> *@
+@* </div> *@
+@* *@
+@* <div class="mt-3"> *@
+@*     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-secondary">Edit Test</a> *@
+@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
+@*      *@
+@*     <a asp-action="GenerateLink" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">Get Test Link</a> *@
+@*      *@
+@*     <br/> *@
+@*     <a asp-action="ViewSubmissions" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">View Submissions</a> *@
+@* </div> *@
+
+
+
 @using TestProgram.Data
 @model TestProgram.Data.Test
 
@@ -23,6 +138,12 @@
         </dt>
         <dd class="col-sm-10">
             @Model.Teacher?.FullName 
+        </dd>
+        <dt class="col-sm-2">
+            Status
+        </dt>
+        <dd class="col-sm-10" id="testStatus">
+            @(Model.IsLocked ? "Locked" : "Unlocked")
         </dd>
     </dl>
 </div>
@@ -98,7 +219,7 @@ else
 <div>
     <a asp-controller="Question" asp-action="CreateTrueFalseQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add tf Question</a>
     <a asp-controller="Question" asp-action="CreateMultipleChoiceQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add mc Question</a>
-   <a asp-controller="Question" asp-action="CreateTextQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add mc Question</a>
+    <a asp-controller="Question" asp-action="CreateTextQuestion" asp-route-testId="@Model.Id" class="btn btn-primary">Add text Question</a>
 </div>
 
 <div class="mt-3">
@@ -109,4 +230,46 @@ else
     
     <br/>
     <a asp-action="ViewSubmissions" asp-controller="Test" asp-route-id="@Model?.Id" class="btn btn-primary">View Submissions</a>
+
+    <button id="lockTestBtn" class="btn btn-warning" data-test-id="@Model.Id">
+        @(Model.IsLocked ? "Unlock Test" : "Lock Test")
+    </button>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#lockTestBtn').click(function() {
+                var testId = $(this).data('test-id');
+                var isLocked = $(this).text() === 'Unlock Test';
+
+                $.ajax({
+                    url: '@Url.Action("LockTest", "Test")',
+                    type: 'POST',
+                    data: {
+                        id: testId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            if (result.isLocked) {
+                                $('#lockTestBtn').text('Unlock Test');
+                                $('#testStatus').text('Locked');
+                            } else {
+                                $('#lockTestBtn').text('Lock Test');
+                                $('#testStatus').text('Unlocked');
+                            }
+                        } else {
+                            alert('Failed to update test status.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred while updating the test status.');
+                    }
+                });
+            });
+        });
+    </script>
+    @Html.AntiForgeryToken()
+}

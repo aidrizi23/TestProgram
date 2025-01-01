@@ -83,10 +83,21 @@
 
         function navigateToQuestion() {
             saveCurrentAnswer();
+            var queryParams = new URLSearchParams({
+                firstName: '@Model.FirstName',
+                lastName: '@Model.LastName',
+                currentQuestionIndex: currentIndex
+            });
+
+            // Add answers to query params if they exist
+            if (Object.keys(answers).length > 0) {
+                Object.keys(answers).forEach(key => {
+                    queryParams.append(`answers[${key}]`, answers[key]);
+                });
+            }
+
             var url = '@Url.Action("TakeTest", "StudentTest", new { testId = Model.TestId })' +
-                '?firstName=' + encodeURIComponent('@Model.FirstName') +
-                '&lastName=' + encodeURIComponent('@Model.LastName') +
-                '&currentQuestionIndex=' + currentIndex;
+                '?' + queryParams.toString();
 
             // Store answers in sessionStorage
             sessionStorage.setItem('testAnswers', JSON.stringify(answers));

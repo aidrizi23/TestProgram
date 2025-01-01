@@ -13,6 +13,8 @@ public class Test : BaseEntity
    
     public int TotalPoints { get; set; } = 0;
     
+    public bool IsLocked { get; set; } = false;
+    
     public int CalculateTotalPoints()
     {
         int total = 0;
@@ -22,5 +24,5 @@ public class Test : BaseEntity
         }
         return total;
     }
-   
+    
 }
