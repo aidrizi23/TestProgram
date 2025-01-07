@@ -18,6 +18,10 @@ public class Test : BaseEntity
     public int CalculateTotalPoints()
     {
         int total = 0;
+        if(Questions.Count == 0)
+        {
+            return total;
+        }
         foreach (var question in Questions)
         {
             total += question.Points;

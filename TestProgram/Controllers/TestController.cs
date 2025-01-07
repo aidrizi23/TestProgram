@@ -259,6 +259,5 @@ public class TestController : Controller
 
             return Json(new { isLocked = test.IsLocked });
         }
-
-    
+        
 }

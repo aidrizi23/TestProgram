@@ -169,9 +169,11 @@ public class QuestionController : Controller
             return Unauthorized();
         }
         
-        var test = await _testRepository.GetTestByIdWithQuestions(id);
         
         var question = await _questionRepository.GetQuestionById(id);
+        
+        
+        var test = await _testRepository.GetTestByIdWithQuestions(question!.TestId);
         if (question is null)
         {
             return NotFound();
