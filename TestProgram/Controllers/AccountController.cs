@@ -37,4 +37,41 @@ public class AccountController : Controller
         
         return View(model);
     }
+    
+    
+    public IActionResult Register()
+    {
+        RegisterViewModel model = new RegisterViewModel();
+        return View(model);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+            var user = new Teacher
+            {
+                UserName = model.Email, 
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                NormalizedEmail = model.Email.ToUpper(),
+                NormalizedUserName = model.Email.ToUpper(),
+                Id =  Guid.NewGuid().ToString(),
+                EmailConfirmed = true,
+                LockoutEnabled = true,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                
+            };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        return View(model);
+    }
 }

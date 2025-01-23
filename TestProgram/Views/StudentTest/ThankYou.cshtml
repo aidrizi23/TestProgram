@@ -1,11 +1,36 @@
 @model TestProgram.Models.Test.TestSubmissionViewModel
 
-<h2>Thank You for Completing the Test</h2>
+@{
+    ViewData["Title"] = "Test Submission - Thank You";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<p>Name: @Model.StudentFullName</p>
-<p>Test: @Model.TestName</p>
-<p>Total Score: @Model.TotalScore</p>
+<div class="container my-5">
+    <!-- Thank You Message -->
+    <h2 class="text-center mb-4 text-success">Thank You for Completing the Test!</h2>
 
-<p>Your responses have been recorded. The teacher will review your answers and provide your final score.</p>
+    <!-- Submission Details -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Submission Details</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Student Name:</dt>
+                <dd class="col-sm-9">@Model.StudentFullName</dd>
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>
+                <dt class="col-sm-3">Test Name:</dt>
+                <dd class="col-sm-9">@Model.TestName</dd>
+
+                <dt class="col-sm-3">Total Score:</dt>
+                <dd class="col-sm-9">@Model.TotalScore</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Submission Confirmation -->
+    <div class="mt-4">
+        <p>Your responses have been recorded. The teacher will review your answers and provide your final score.</p>
+    </div>
+    
+</div>

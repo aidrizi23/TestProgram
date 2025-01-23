@@ -1,3 +1,118 @@
+@* @model TestProgram.Models.Question.MultipleChoiceForCreationDto *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Create Multiple Choice Question"; *@
+@*     Layout = "~/Views/Shared/_Layout.cshtml"; *@
+@* } *@
+@* *@
+@* <h1>Create Multiple Choice Question</h1> *@
+@* *@
+@* <div class="card"> *@
+@*     <div class="card-body"> *@
+@*         <form asp-action="CreateMultipleChoiceQuestion" asp-controller="Question" method="post"> *@
+@*             <input type="hidden" asp-for="TestId" /> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="QuestionText" class="form-label">Question Text</label> *@
+@*                 <textarea asp-for="QuestionText" class="form-control" rows="3"></textarea> *@
+@*                 <span asp-validation-for="QuestionText" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Points" class="form-label">Points</label> *@
+@*                 <input asp-for="Points" class="form-control" type="number" min="1" /> *@
+@*                 <span asp-validation-for="Points" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label class="form-label">Options</label> *@
+@*                 <div id="options-container"> *@
+@*                     <div class="input-group mb-2"> *@
+@*                         <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" /> *@
+@*                         <button type="button" class="btn btn-success set-correct">Set as Correct</button> *@
+@*                         <button type="button" class="btn btn-danger remove-option">Remove</button> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <button type="button" id="add-option" class="btn btn-secondary mt-2">Add Option</button> *@
+@*                 <span asp-validation-for="Options" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group mt-3"> *@
+@*                 <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label> *@
+@*                 <input asp-for="CorrectAnswer" id="correct-answer" class="form-control" readonly placeholder="Select an option to set as the correct answer" /> *@
+@*                 <span asp-validation-for="CorrectAnswer" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <button type="submit" class="btn btn-primary mt-3">Create</button> *@
+@*             <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary mt-3">Cancel</a> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     <partial name="_ValidationScriptsPartial" /> *@
+@*     <script> *@
+@*         document.getElementById('add-option').addEventListener('click', function () { *@
+@*             const container = document.getElementById('options-container'); *@
+@*             const newOption = document.createElement('div'); *@
+@*             newOption.classList.add('input-group', 'mb-2'); *@
+@*             newOption.innerHTML = ` *@
+@*                 <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" /> *@
+@*                 <button type="button" class="btn btn-success set-correct">Set as Correct</button> *@
+@*                 <button type="button" class="btn btn-danger remove-option">Remove</button> *@
+@*             `; *@
+@*             container.appendChild(newOption); *@
+@* *@
+@*             // Attach event listeners to new buttons *@
+@*             newOption.querySelector('.set-correct').addEventListener('click', function () { *@
+@*                 setCorrectAnswer(newOption.querySelector('.option-input').value); *@
+@*             }); *@
+@*             newOption.querySelector('.remove-option').addEventListener('click', function () { *@
+@*                 handleOptionRemoval(newOption); *@
+@*             }); *@
+@*         }); *@
+@* *@
+@*         document.querySelectorAll('.set-correct').forEach(button => { *@
+@*             button.addEventListener('click', function () { *@
+@*                 const input = this.closest('.input-group').querySelector('.option-input'); *@
+@*                 setCorrectAnswer(input.value); *@
+@*             }); *@
+@*         }); *@
+@* *@
+@*         document.querySelectorAll('.remove-option').forEach(button => { *@
+@*             button.addEventListener('click', function () { *@
+@*                 const container = document.getElementById('options-container'); *@
+@*                 const optionGroup = this.closest('.input-group'); *@
+@*                 handleOptionRemoval(optionGroup); *@
+@*             }); *@
+@*         }); *@
+@* *@
+@*         function setCorrectAnswer(value) { *@
+@*             if (value.trim() === "") { *@
+@*                 alert("Option cannot be empty!"); *@
+@*                 return; *@
+@*             } *@
+@*             document.getElementById('correct-answer').value = value; *@
+@*         } *@
+@* *@
+@*         function handleOptionRemoval(optionGroup) { *@
+@*             const correctAnswerField = document.getElementById('correct-answer'); *@
+@*             const optionInput = optionGroup.querySelector('.option-input'); *@
+@* *@
+@*             // Clear the correct answer if the removed option matches the current correct answer *@
+@*             if (correctAnswerField.value === optionInput.value) { *@
+@*                 correctAnswerField.value = ""; *@
+@*             } *@
+@* *@
+@*             // Remove the option from the container *@
+@*             const container = document.getElementById('options-container'); *@
+@*             container.removeChild(optionGroup); *@
+@*         } *@
+@*     </script> *@
+@* } *@
+
+
+
 @model TestProgram.Models.Question.MultipleChoiceForCreationDto
 
 @{
@@ -5,47 +120,102 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create Multiple Choice Question</h1>
+<style>
+    .question-creation-container {
+        background-color: #f4f6f9;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="CreateMultipleChoiceQuestion" asp-controller="Question" method="post">
-            <input type="hidden" asp-for="TestId" />
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-            <div class="form-group">
-                <label asp-for="QuestionText" class="form-label">Question Text</label>
-                <textarea asp-for="QuestionText" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="QuestionText" class="text-danger"></span>
-            </div>
+    .options-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
 
-            <div class="form-group">
-                <label asp-for="Points" class="form-label">Points</label>
-                <input asp-for="Points" class="form-control" type="number" min="1" />
-                <span asp-validation-for="Points" class="text-danger"></span>
-            </div>
+    #options-container .input-group {
+        transition: all 0.3s ease;
+    }
 
-            <div class="form-group">
-                <label class="form-label">Options</label>
-                <div id="options-container">
-                    <div class="input-group mb-2">
-                        <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" />
-                        <button type="button" class="btn btn-success set-correct">Set as Correct</button>
-                        <button type="button" class="btn btn-danger remove-option">Remove</button>
-                    </div>
+    #options-container .input-group:hover {
+        background-color: rgba(0,123,255,0.05);
+    }
+
+    .btn-set-correct {
+        position: relative;
+    }
+
+    .btn-set-correct.active {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-set-correct.active::after {
+        content: '✓';
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: white;
+        color: #28a745;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.7rem;
+    }
+</style>
+
+<div class="container question-creation-container">
+    <h1 class="text-center mb-4">Create Multiple Choice Question</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="CreateMultipleChoiceQuestion" asp-controller="Question" method="post">
+                <input type="hidden" asp-for="TestId" />
+
+                <div class="form-group">
+                    <label asp-for="QuestionText" class="form-label">Question Text</label>
+                    <textarea asp-for="QuestionText" class="form-control" rows="3" placeholder="Enter your question here"></textarea>
+                    <span asp-validation-for="QuestionText" class="text-danger"></span>
                 </div>
-                <button type="button" id="add-option" class="btn btn-secondary mt-2">Add Option</button>
-                <span asp-validation-for="Options" class="text-danger"></span>
-            </div>
 
-            <div class="form-group mt-3">
-                <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
-                <input asp-for="CorrectAnswer" id="correct-answer" class="form-control" readonly placeholder="Select an option to set as the correct answer" />
-                <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="Points" class="form-label">Points</label>
+                    <input asp-for="Points" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Points" class="text-danger"></span>
+                </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Create</button>
-            <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary mt-3">Cancel</a>
-        </form>
+                <div class="form-group">
+                    <div class="options-header">
+                        <label class="form-label mb-0">Options</label>
+                        <button type="button" id="add-option" class="btn btn-sm btn-secondary">Add Option</button>
+                    </div>
+                    <div id="options-container">
+                        <div class="input-group mb-2">
+                            <input type="text" name="Options" class="form-control option-input" placeholder="Enter an option" />
+                            <button type="button" class="btn btn-success set-correct">Set as Correct</button>
+                            <button type="button" class="btn btn-danger remove-option">Remove</button>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Options" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
+                    <input asp-for="CorrectAnswer" id="correct-answer" class="form-control" readonly placeholder="Select an option to set as the correct answer" />
+                    <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">Create Question</button>
+                    <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -65,7 +235,7 @@
 
             // Attach event listeners to new buttons
             newOption.querySelector('.set-correct').addEventListener('click', function () {
-                setCorrectAnswer(newOption.querySelector('.option-input').value);
+                setCorrectAnswer(newOption.querySelector('.option-input').value, this);
             });
             newOption.querySelector('.remove-option').addEventListener('click', function () {
                 handleOptionRemoval(newOption);
@@ -75,7 +245,7 @@
         document.querySelectorAll('.set-correct').forEach(button => {
             button.addEventListener('click', function () {
                 const input = this.closest('.input-group').querySelector('.option-input');
-                setCorrectAnswer(input.value);
+                setCorrectAnswer(input.value, this);
             });
         });
 
@@ -87,11 +257,20 @@
             });
         });
 
-        function setCorrectAnswer(value) {
+        function setCorrectAnswer(value, button) {
             if (value.trim() === "") {
                 alert("Option cannot be empty!");
                 return;
             }
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.set-correct').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active state to current button
+            button.classList.add('active');
+
             document.getElementById('correct-answer').value = value;
         }
 

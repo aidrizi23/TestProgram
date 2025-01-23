@@ -355,7 +355,7 @@ namespace TestProgram.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e6ac81d7-8bf0-4dd2-b384-6b091e45806b",
+                            ConcurrencyStamp = "e0300956-2778-4616-a2dc-c12727f8b7b3",
                             Email = "albiidrizi@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Albi",
@@ -363,9 +363,27 @@ namespace TestProgram.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALBIIDRIZI@GMAIL.COM",
                             NormalizedUserName = "TEACHER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHlZG9pTMoZsY7kmadXBDxdq/tk5jJlBKVBcWUV7LWsw6MYSrhq6clIy518CBp6lFg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOx5ZTXvDmUiAgqmMsXs2ydHvlsnwVAoRkRPDFFGI22rQ03RJ5TEjTM5pCNCmf2Gyw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "22da215e-9495-419f-9b4e-ec4e65259a0d",
+                            SecurityStamp = "f02c3e60-504e-451d-90ca-83b41b8474d9",
+                            TwoFactorEnabled = false,
+                            UserName = "teacher"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "175d0f5d-0511-4dfc-aa6e-eecf028925d5",
+                            Email = "albiidrizi27@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Test",
+                            LastName = "Idrizi",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALBIIDRIZI27@GMAIL.COM",
+                            NormalizedUserName = "TEACHER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJUHIEHwym1PYj0cW+AxKoHwPZUk84lmdTkIeW8wz9ZIzD9kHddFEOR/zziCRbGysg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "573704ff-ba90-4344-9870-dc67630f7293",
                             TwoFactorEnabled = false,
                             UserName = "teacher"
                         });

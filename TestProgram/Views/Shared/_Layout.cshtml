@@ -1,50 +1,177 @@
-﻿<!DOCTYPE html>
+﻿@* $1$ <!DOCTYPE html> #1# *@
+@* $1$ <html lang="en"> #1# *@
+@* $1$ <head> #1# *@
+@* $1$     <meta charset="utf-8"/> #1# *@
+@* $1$     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> #1# *@
+@* $1$     <title>@ViewData["Title"] - TestProgram</title> #1# *@
+@* $1$     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/> #1# *@
+@* $1$     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> #1# *@
+@* $1$     <link rel="stylesheet" href="~/TestProgram.styles.css" asp-append-version="true"/> #1# *@
+@* $1$ </head> #1# *@
+@* $1$ <body> #1# *@
+@* $1$ <header> #1# *@
+@* $1$     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"> #1# *@
+@* $1$         <div class="container-fluid"> #1# *@
+@* $1$             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TestProgram</a> #1# *@
+@* $1$             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" #1# *@
+@* $1$                     aria-expanded="false" aria-label="Toggle navigation"> #1# *@
+@* $1$                 <span class="navbar-toggler-icon"></span> #1# *@
+@* $1$             </button> #1# *@
+@* $1$             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> #1# *@
+@* $1$                 <ul class="navbar-nav flex-grow-1"> #1# *@
+@* $1$                     <li class="nav-item"> #1# *@
+@* $1$                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> #1# *@
+@* $1$                     </li> #1# *@
+@* $1$                     <li class="nav-item"> #1# *@
+@* $1$                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> #1# *@
+@* $1$                     </li> #1# *@
+@* $1$                     <li class="nav-item"> #1# *@
+@* $1$                         <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="Index">Tests</a> #1# *@
+@* $1$                     </li> #1# *@
+@* $1$                 </ul> #1# *@
+@* $1$                 <partial name="_LoginPartial"/> #1# *@
+@* $1$             </div> #1# *@
+@* $1$         </div> #1# *@
+@* $1$     </nav> #1# *@
+@* $1$ </header> #1# *@
+@* $1$ <div class="container"> #1# *@
+@* $1$     <main role="main" class="pb-3"> #1# *@
+@* $1$         @RenderBody() #1# *@
+@* $1$     </main> #1# *@
+@* $1$ </div> #1# *@
+@* $1$ #1# *@
+@* $1$ <footer class="border-top footer text-muted"> #1# *@
+@* $1$     <div class="container"> #1# *@
+@* $1$         &copy; 2024 - TestProgram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> #1# *@
+@* $1$     </div> #1# *@
+@* $1$ </footer> #1# *@
+@* $1$ <script src="~/lib/jquery/dist/jquery.min.js"></script> #1# *@
+@* $1$ <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> #1# *@
+@* $1$ <script src="~/js/site.js" asp-append-version="true"></script> #1# *@
+@* $1$ @await RenderSectionAsync("Scripts", required: false) #1# *@
+@* $1$ </body> #1# *@
+@* $1$ </html> #1# *@
+@* *@
+@* <!DOCTYPE html> *@
+@* <html lang="en"> *@
+@* <head> *@
+@*     <meta charset="utf-8"/> *@
+@*     <meta name="viewport" content="width=device-width, initial-scale=1.0"/> *@
+@*     <title>@ViewData["Title"] - TestProgram</title> *@
+@*     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"> *@
+@*     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/> *@
+@*     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> *@
+@*     <link rel="stylesheet" href="~/TestProgram.styles.css" asp-append-version="true"/> *@
+@* </head> *@
+@* <body> *@
+@* <header> *@
+@*     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm"> *@
+@*         <div class="container-fluid"> *@
+@*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TestProgram</a> *@
+@*             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" *@
+@*                     aria-expanded="false" aria-label="Toggle navigation"> *@
+@*                 <span class="navbar-toggler-icon"></span> *@
+@*             </button> *@
+@*             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
+@*                 <ul class="navbar-nav ms-auto"> *@
+@*                     <li class="nav-item"> *@
+@*                         <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+@*                     </li> *@
+@*                     <li class="nav-item"> *@
+@*                         <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+@*                     </li> *@
+@*                     <li class="nav-item"> *@
+@*                         <a class="nav-link text-light" asp-area="" asp-controller="Test" asp-action="Index">Tests</a> *@
+@*                     </li> *@
+@*                 </ul> *@
+@*                 <partial name="_LoginPartial"/> *@
+@*             </div> *@
+@*         </div> *@
+@*     </nav> *@
+@* </header> *@
+@* <div class="container mt-5"> *@
+@*     <main role="main" class="pb-3"> *@
+@*         @RenderBody() *@
+@*     </main> *@
+@* </div> *@
+@* *@
+@* *@
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+@* <script src="~/js/site.js" asp-append-version="true"></script> *@
+@* @await RenderSectionAsync("Scripts", required: false) *@
+@* </body> *@
+@* </html> *@
+@* *@
+@* *@
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - TestProgram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/TestProgram.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+<div class="wrapper">
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-graduation-cap me-2"></i>TestProgram
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Test" asp-action="Index">
+                                <i class="fas fa-file-alt me-1"></i>Tests
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt me-1"></i>Privacy
+                            </a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content">
+        <div class="container-fluid px-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TestProgram</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-action="Index">Tests</a>
-                    </li>
-                </ul>
-                <partial name="_LoginPartial"/>
+            <div class="row">
+                <div class="col-12 text-center">
+                    &copy; @DateTime.Now.Year - TestProgram 
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
             </div>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
+    </footer>
 </div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2024 - TestProgram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>

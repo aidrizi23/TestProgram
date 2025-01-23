@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using TestProgram.Data;
 using TestProgram.Models.Student;
 using TestProgram.Models.Test;
@@ -13,16 +14,23 @@ public class StudentTestController : Controller
     private readonly ITestRepository _testRepository;
     private readonly IQuestionRepository _questionRepository;
     private readonly ITestSubmissionRepository _testSubmissionRepository;
-    public StudentTestController(ITestRepository testRepository,ITestSubmissionRepository testSubmissionRepository, IQuestionRepository questionRepository)
+    private readonly UserManager<Teacher> _userManager;
+    private readonly SignInManager<Teacher> _signInManager;
+    public StudentTestController(SignInManager<Teacher> signInManager, UserManager<Teacher> userManager, ITestRepository testRepository,ITestSubmissionRepository testSubmissionRepository, IQuestionRepository questionRepository)
     {
         _testRepository = testRepository;
         _questionRepository = questionRepository;
         _testSubmissionRepository = testSubmissionRepository;
+        _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     [HttpGet("{testId}")]
     public async Task<IActionResult> StartTest(int testId)
     {
+
+        // sign out the user
+        await _signInManager.SignOutAsync();
         var test = await _testRepository.GetTestByIdWithQuestions(testId);
         if (test == null || test.IsLocked)
         {
@@ -41,8 +49,6 @@ public class StudentTestController : Controller
     [HttpPost("{testId}")]
     public async Task<IActionResult> StartTest(int testId, StartTestViewModel model)
     {
-     
-
         var test = await _testRepository.GetTestByIdWithQuestions(testId);
         if (test == null || test.IsLocked)
         {

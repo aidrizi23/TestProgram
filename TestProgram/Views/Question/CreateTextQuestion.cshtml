@@ -1,38 +1,111 @@
+@* @model TestProgram.Models.Question.TextQuestionForCreationDto *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Create Text Question"; *@
+@* } *@
+@* *@
+@* <h2>Create Text Question</h2> *@
+@* *@
+@* <form asp-action="CreateTextQuestion" method="post"> *@
+@*     <input type="hidden" asp-for="TestId" /> *@
+@* *@
+@*     <div class="form-group"> *@
+@*         <label asp-for="QuestionText" class="control-label">Question Text</label> *@
+@*         <textarea asp-for="QuestionText" class="form-control"></textarea> *@
+@*         <span asp-validation-for="QuestionText" class="text-danger"></span> *@
+@*     </div> *@
+@* *@
+@*     <div class="form-group"> *@
+@*         <label asp-for="Points" class="control-label">Points</label> *@
+@*         <input asp-for="Points" class="form-control" type="number" /> *@
+@*         <span asp-validation-for="Points" class="text-danger"></span> *@
+@*     </div> *@
+@* *@
+@*     <div class="form-group"> *@
+@*         <label asp-for="ExpectedAnswer" class="control-label">Expected Answers</label> *@
+@*         <textarea asp-for="ExpectedAnswer" class="form-control" placeholder="Enter each answer on a new line..."></textarea> *@
+@*         <span asp-validation-for="ExpectedAnswer" class="text-danger"></span> *@
+@*     </div> *@
+@* *@
+@*     <div class="form-group"> *@
+@*         <button type="submit" class="btn btn-primary">Create</button> *@
+@*         <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary">Cancel</a> *@
+@*     </div> *@
+@* </form> *@
+@* *@
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@
+
+
+
 @model TestProgram.Models.Question.TextQuestionForCreationDto
 
 @{
     ViewData["Title"] = "Create Text Question";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create Text Question</h2>
+<style>
+    .text-question-container {
+        background-color: #f4f6f9;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
 
-<form asp-action="CreateTextQuestion" method="post">
-    <input type="hidden" asp-for="TestId" />
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-    <div class="form-group">
-        <label asp-for="QuestionText" class="control-label">Question Text</label>
-        <textarea asp-for="QuestionText" class="form-control"></textarea>
-        <span asp-validation-for="QuestionText" class="text-danger"></span>
+    .expected-answers-textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .btn-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container text-question-container">
+    <h1 class="text-center mb-4">Create Text Question</h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="CreateTextQuestion" method="post">
+                <input type="hidden" asp-for="TestId" />
+
+                <div class="form-group">
+                    <label asp-for="QuestionText" class="form-label">Question Text</label>
+                    <textarea asp-for="QuestionText" class="form-control" rows="3" placeholder="Enter your question here"></textarea>
+                    <span asp-validation-for="QuestionText" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Points" class="form-label">Points</label>
+                    <input asp-for="Points" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Points" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ExpectedAnswer" class="form-label">Expected Answers</label>
+                    <textarea asp-for="ExpectedAnswer" class="form-control expected-answers-textarea" placeholder="Enter each answer on a new line..."></textarea>
+                    <small class="form-text text-muted">Separate multiple acceptable answers with a new line</small>
+                    <span asp-validation-for="ExpectedAnswer" class="text-danger"></span>
+                </div>
+
+                <div class="btn-actions">
+                    <button type="submit" class="btn btn-primary">Create Question</button>
+                    <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Points" class="control-label">Points</label>
-        <input asp-for="Points" class="form-control" type="number" />
-        <span asp-validation-for="Points" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ExpectedAnswer" class="control-label">Expected Answers</label>
-        <textarea asp-for="ExpectedAnswer" class="form-control" placeholder="Enter each answer on a new line..."></textarea>
-        <span asp-validation-for="ExpectedAnswer" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

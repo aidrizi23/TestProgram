@@ -63,6 +63,23 @@ public class ApplicationDbContext : IdentityDbContext
             
         });
         
+        modelBuilder.Entity<Teacher>().HasData(new Teacher
+        {
+            Id = "2",
+            UserName = "teacher",
+            NormalizedUserName = "TEACHER",
+            Email = "albiidrizi27@gmail.com",
+            NormalizedEmail = "albiidrizi27@gmail.com".ToUpper(),
+            EmailConfirmed = true,
+            FirstName = "Test",
+            LastName = "Idrizi",
+            ConcurrencyStamp = Guid.NewGuid().ToString(),
+            SecurityStamp = Guid.NewGuid().ToString(),
+            PasswordHash = new PasswordHasher<Teacher>().HashPassword(null, "albiidrizi27"),
+            TwoFactorEnabled = false,
+            
+        });
+        
             
     }
 }

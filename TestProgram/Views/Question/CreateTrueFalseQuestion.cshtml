@@ -1,3 +1,49 @@
+@* @model TestProgram.Data.TrueFalseQuestion *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Create True/False Question"; *@
+@*     Layout = "~/Views/Shared/_Layout.cshtml"; *@
+@* } *@
+@* *@
+@* <h1>Create True/False Question</h1> *@
+@* *@
+@* <div class="card"> *@
+@*     <div class="card-body"> *@
+@*         <form asp-action="CreateTrueFalseQuestion" asp-controller="Question" method="post"> *@
+@*             <input type="hidden" asp-for="TestId" /> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="QuestionText" class="form-label">Question Text</label> *@
+@*                 <textarea asp-for="QuestionText" class="form-control" rows="3"></textarea> *@
+@*                 <span asp-validation-for="QuestionText" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="Points" class="form-label">Points</label> *@
+@*                 <input asp-for="Points" class="form-control" type="number" min="1" /> *@
+@*                 <span asp-validation-for="Points" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label> *@
+@*                 <select asp-for="CorrectAnswer" class="form-control"> *@
+@*                     <option value="true">True</option> *@
+@*                     <option value="false">False</option> *@
+@*                 </select> *@
+@*                 <span asp-validation-for="CorrectAnswer" class="text-danger"></span> *@
+@*             </div> *@
+@* *@
+@*             <button type="submit" class="btn btn-primary mt-3">Create</button> *@
+@*             <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary mt-3">Cancel</a> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     <partial name="_ValidationScriptsPartial" /> *@
+@* } *@
+
+
 @model TestProgram.Data.TrueFalseQuestion
 
 @{
@@ -5,37 +51,83 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create True/False Question</h1>
+<style>
+    .true-false-container {
+        background-color: #f4f6f9;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    }
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="CreateTrueFalseQuestion" asp-controller="Question" method="post">
-            <input type="hidden" asp-for="TestId" />
+    .true-false-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-            <div class="form-group">
-                <label asp-for="QuestionText" class="form-label">Question Text</label>
-                <textarea asp-for="QuestionText" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="QuestionText" class="text-danger"></span>
-            </div>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-            <div class="form-group">
-                <label asp-for="Points" class="form-label">Points</label>
-                <input asp-for="Points" class="form-control" type="number" min="1" />
-                <span asp-validation-for="Points" class="text-danger"></span>
-            </div>
+    .correct-answer-select {
+        appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, #007bff 50%),
+                          linear-gradient(135deg, #007bff 50%, transparent 50%);
+        background-position: calc(100% - 20px) calc(1em + 2px),
+                             calc(100% - 15px) calc(1em + 2px),
+                             calc(100% - 2.5em) 0.5em;
+        background-size: 5px 5px,
+                         5px 5px,
+                         1px 1.5em;
+        background-repeat: no-repeat;
+    }
 
-            <div class="form-group">
-                <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
-                <select asp-for="CorrectAnswer" class="form-control">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-                <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
-            </div>
+    .correct-answer-select option {
+        padding: 10px;
+    }
 
-            <button type="submit" class="btn btn-primary mt-3">Create</button>
-            <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary mt-3">Cancel</a>
-        </form>
+    .btn-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container true-false-container">
+    <h1 class="text-center mb-4">Create True/False Question</h1>
+
+    <div class="card true-false-card">
+        <div class="card-body">
+            <form asp-action="CreateTrueFalseQuestion" asp-controller="Question" method="post">
+                <input type="hidden" asp-for="TestId" />
+
+                <div class="form-group">
+                    <label asp-for="QuestionText" class="form-label">Question Text</label>
+                    <textarea asp-for="QuestionText" class="form-control" rows="3" placeholder="Enter your true/false question"></textarea>
+                    <span asp-validation-for="QuestionText" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Points" class="form-label">Points</label>
+                    <input asp-for="Points" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Points" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CorrectAnswer" class="form-label">Correct Answer</label>
+                    <select asp-for="CorrectAnswer" class="form-control correct-answer-select">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                    <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+                </div>
+
+                <div class="btn-actions">
+                    <button type="submit" class="btn btn-primary">Create Question</button>
+                    <a asp-action="Details" asp-controller="Test" asp-route-id="@Model.TestId" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
